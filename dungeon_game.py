@@ -4,12 +4,14 @@ import time
 import sys
 
 CELLS = []
-for i in range(0,20):
-    for j in range(0,20):
-        CELLS.append((j,i))
+for i in range(0, 20):
+    for j in range(0, 20):
+        CELLS.append((j, i))
+
 
 def clear_screen():
     os.system('cls' if os.name == 'nt' else 'clear')
+
 
 def check_boundry(possible_moves, monster_x, monster_y):
     if monster_x == 0:
@@ -21,6 +23,7 @@ def check_boundry(possible_moves, monster_x, monster_y):
     elif monster_y == 19:
         possible_moves.remove('DOWN')
     return possible_moves
+
 
 def check_door(possible_moves, monster_x, monster_y, door):
     door_x, door_y = door
@@ -38,19 +41,23 @@ def check_door(possible_moves, monster_x, monster_y, door):
             possible_moves.remove('UP')
     return possible_moves
 
+
 def hms_string(sec_elapsed):
     h = int(sec_elapsed / (60 * 60))
     m = int((sec_elapsed % (60 * 60)) / 60)
     s = sec_elapsed % 60.
     return "{}:{:>02}:{:>05.2f}".format(h, m, s)
 
+
 def get_locations():
     return random.sample(CELLS, 12)
 
+
 def move_player(player, move):
     x, y = player
-    hasher = {'A':[-1,0],'D':[1,0],'W':[0,-1],'S':[0,1]}
-    return x+hasher[move][0], y+hasher[move][1]
+    hasher = {'A': [-1, 0], 'D': [1, 0], 'W': [0, -1], 'S': [0, 1]}
+    return x + hasher[move][0], y + hasher[move][1]
+
 
 def check_monster(possible_moves, x, y, other_monster):
     x1, y1 = other_monster
@@ -68,6 +75,7 @@ def check_monster(possible_moves, x, y, other_monster):
             possible_moves.remove('UP')
     return possible_moves
 
+
 def get_moves(player):
     moves = ['W', 'A', 'S', 'D']
     x, y = player
@@ -75,14 +83,15 @@ def get_moves(player):
         moves.remove('A')
     elif x == 19:
         moves.remove('D')
-    if y == 0:
+    elif y == 0:
         moves.remove('W')
     elif y == 19:
         moves.remove('S')
     return moves
 
+
 def draw_map(player, door, list_of_monster):
-    print(' _'*20)
+    print(' _' * 20)
     tile = '|{}'
     for cell in CELLS:
         x, y = cell
@@ -108,7 +117,8 @@ def draw_map(player, door, list_of_monster):
                 output = tile.format('_|')
         print(output, end=line_end)
 
-def move_monster(monster, player, start_time, name, door,list_of_monsters, wins, losses):
+
+def move_monster(monster, player, start_time, name, door, list_of_monsters, wins, losses):
     possible_moves = ['LEFT', 'RIGHT', 'UP', 'DOWN']
     x, y = monster
     possible_moves = check_boundry(possible_moves, x, y)
@@ -129,17 +139,18 @@ def move_monster(monster, player, start_time, name, door,list_of_monsters, wins,
     if monster == player:
         print('\n ** Oh no! The monster got you, {}, better luck next time! ** \n'.format(name))
         input("""
-                                            R.I.P
-                                          {}
-                                        Time Alive: {}
-                        Died because of a monster that lives under my bed
-                                        """.format(name, hms_string(time.time() - start_time)))
+                                          R.I.P
+                                        {}
+                                      Time Alive: {}
+                      Died because of a monster that lives under my bed
+                                      """.format(name, hms_string(time.time() - start_time)))
         losses += 1
         if input('Play again? [Y/n] '.lower()) != 'n':
             game_loop(name, wins, losses)
         print('Thanks for playing, see you next time!')
         sys.exit()
     return monster
+
 
 def game_loop(name, wins, losses):
     hp = 100
@@ -151,7 +162,7 @@ def game_loop(name, wins, losses):
         clear_screen()
         for i in range(len(list_of_mob)):
             list_of_mob[i] = move_monster(list_of_mob[i], player, start_time, name, door, list_of_mob, wins, losses)
-        draw_map(player, door,list_of_mob)
+        draw_map(player, door, list_of_mob)
         valid_moves = get_moves(player)
         print('Wins: {} Losses: {}'.format(wins, losses))
         print(' ** You are currently at {}, {}. **'.format(player, name))
@@ -160,7 +171,8 @@ def game_loop(name, wins, losses):
         print(' ** X marks the spot, get out of the dungeon as fast as possible {}! **'.format(name))
         print(' ** Watch out for the monsters {}, they will kill you on first sight! **'.format(name))
         print(' ** {}, you are the \'O\' on the dungeon board! **'.format(name))
-        print(' ** Watch out for spelling errors {}, giving wrong commands to your player can cause errors **'.format(name))
+        print(' ** Watch out for spelling errors {}, giving wrong commands to your player can cause errors **'.format(
+            name))
         print(' ** Your current health is {}, keep it as high as possible {}! **'.format(hp, name))
         move = input("> ")
         move = move.upper()
@@ -182,7 +194,9 @@ def game_loop(name, wins, losses):
             if player == door:
                 clear_screen()
                 if playing != False:
-                    print('\n ** Congratulations! You have escaped the dungeon {}! It was pretty easy. ** \n  ** It only took you {}!'.format(name, hms_string(time.time() - start_time)))
+                    print(
+                        '\n ** Congratulations! You have escaped the dungeon {}! It was pretty easy. ** \n  ** It only took you {}!'.format(
+                            name, hms_string(time.time() - start_time)))
                     playing = False
                     wins += 1
         else:
@@ -202,6 +216,7 @@ How are you dumb enough to hit walls and spell WASD wrong?
             game_loop(name, wins, losses)
         else:
             print(' \n ** See you next time! ** \n ')
+
 
 clear_screen()
 print('Welcome to the Dungeon!')
