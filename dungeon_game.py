@@ -90,7 +90,7 @@ def get_moves(player):
     return moves
 
 
-def draw_map(player, door, list_of_monster):
+def draw_map(player, door, list_of_mob):
     print(' _' * 20)
     tile = '|{}'
     for cell in CELLS:
@@ -101,7 +101,7 @@ def draw_map(player, door, list_of_monster):
                 output = tile.format('O')
             elif cell == door:
                 output = tile.format('X')
-            elif cell in list_of_monster:
+            elif cell in list_of_mob:
                 output = tile.format('M')
             else:
                 output = tile.format('_')
@@ -111,19 +111,19 @@ def draw_map(player, door, list_of_monster):
                 output = tile.format('O|')
             elif cell == door:
                 output = tile.format('X|')
-            elif cell in list_of_monster:
+            elif cell in list_of_mob:
                 output = tile.format('M|')
             else:
                 output = tile.format('_|')
         print(output, end=line_end)
 
 
-def move_monster(monster, player, start_time, name, door, list_of_monsters, wins, losses):
+def move_monster(monster, player, start_time, name, door, list_of_mob, wins, losses):
     possible_moves = ['LEFT', 'RIGHT', 'UP', 'DOWN']
     x, y = monster
     possible_moves = check_boundry(possible_moves, x, y)
     possible_moves = check_door(possible_moves, x, y, door)
-    for monsters in list_of_monsters:
+    for monsters in list_of_mob:
         possible_moves = check_monster(possible_moves, x, y, monsters)
     if len(possible_moves) >= 1:
         monster_move = random.sample(possible_moves, 1)
